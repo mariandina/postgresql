@@ -300,9 +300,36 @@ PostgreSQL executes the query that contains a subquery in the following sequence
 - Second, gets the result and passes it to the outer query.
 - Third, executes the outer query.
 
-* **
+A subquery can return zero or more rows. To use this subquery, you use the IN operator in the WHERE clause.
+For example, to get films that have the returned date between 2005-05-29 and 2005-05-30, you use the following query:
 
+SELECT inventory.film_id FROM rental INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id WHERE return_date BETWEEN '2005-05-29' AND '2005-05-30';
 
+It returns multiple rows so we can use this query as a subquery in the WHERE clause of a query as follows:
+
+SELECT film_id, title FROM film WHERE film_id IN ( SELECT inventory.film_id FROM rental INNER JOIN inventory ON inventory.inventory_id = rental.inventory_id WHERE return_date BETWEEN '2005-05-29' AND '2005-05-30' );
+
+A subquery can be an input of the EXISTS operator. If the subquery returns any row, the EXISTS operator returns true. If the subquery returns no row, the result of EXISTS operator is false.
+
+SELECT first_name, last_name FROM customer WHERE EXISTS ( SELECT * FROM payment WHERE payment.customer_id = customer.customer_id );
+
+* **INSERT**
+
+INSERT INTO table(column1, column2, …)
+VALUES
+(value1, value2, …);
+
+*ADD MULTIPLE ROWS:*
+INSERT INTO table (column1, column2, …)
+VALUES
+ (value1, value2, …),
+ (value1, value2, …) ,...;
+
+*To insert data that comes from another table, you use the INSERT INTO SELECT statement as follows:*
+INSERT INTO table(value1,value2,...)
+SELECT column1,column2,...
+FROM another_table
+WHERE condition;
 
 
 
